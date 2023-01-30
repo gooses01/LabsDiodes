@@ -209,10 +209,10 @@ lims = [(35,100),(95,130),(9,15),(28,44),(18,24)]
 #plt.plot(V[5][18:24],lnI[5][18:24],"o")
 #plt.show()
 
-fits = []
+fits0 = []
 for i in range(len(V)):
     fit,cov = np.polyfit(V[i][lims[i][0]:lims[i][1]],lnI[i][lims[i][0]:lims[i][1]],1,cov=1)
-    fits.append(fit)
+    fits0.append(fit[0])
     Vs = np.linspace(V[i][lims[i][0]],V[i][lims[i][1]],100)
     plt.plot(V[i],lnI[i],'o')
     plt.plot(Vs,fit[0]*Vs + fit[1])
@@ -221,13 +221,169 @@ for i in range(len(V)):
     plt.ylabel("lnCurrent (lnI)")
     plt.show()
 
+nid = e/(np.array(fits0)*kB*T_room)
+print(nid)
+
 
 
 #%% Reverse bias diodes 300K
+zener9V1_78K = pd.read_csv("all_data//zener_9V1_78K1.csv",skiprows=7).sort_values("Value")
+zener2V7_78K = pd.read_csv("all_data//zener2V7_78K3.csv",skiprows=7).sort_values("Value")
+data_zener2V7=pd.read_csv("all_data//tk3_zener2V7_DIODE.csv",skiprows=7)
+data_zener9V1=pd.read_csv("all_data//9V1_20mA_0V5.csv",skiprows=7)
+
+#zener2V7_78K_2 = pd.read_csv("all_data//fwd_zener_2V7_78K1.csv",skiprows=7).sort_values("Value")
+#zener9V1_78K_2 = pd.read_csv("all_data//fwd_zener_9V1_78K.csv",skiprows=7).sort_values("Value")
+
+V=[]
+I=[]
+lnI=[]
+V.append(zener9V1_78K["Value"].to_numpy())
+I.append(zener9V1_78K["Reading"].to_numpy())
+lnI.append(np.log(zener9V1_78K["Reading"].to_numpy()))
+
+V.append(zener2V7_78K["Value"].to_numpy())
+I.append(zener2V7_78K["Reading"].to_numpy())
+lnI.append(np.log(zener2V7_78K["Reading"].to_numpy()))
+
+V.append(data_zener2V7["Value"].to_numpy())
+I.append(data_zener2V7["Reading"].to_numpy())
+lnI.append(np.log(data_zener2V7["Reading"].to_numpy()))
+
+V.append(data_zener9V1["Value"].to_numpy())
+I.append(data_zener9V1["Reading"].to_numpy())
+lnI.append(np.log(data_zener9V1["Reading"].to_numpy()))
+
+#V.append(data_zener9V1_2["Value"].to_numpy())
+#I.append(data_zener9V1_2["Reading"].to_numpy())
+#lnI.append(np.log(data_zener9V1_2["Reading"].to_numpy()))
+
+#V.append(zener9V1_78K_2["Value"].to_numpy())
+#I.append(zener9V1_78K_2["Reading"].to_numpy())
+#lnI.append(np.log(zener9V1_78K_2["Reading"].to_numpy()))
+
+#V.append(zener2V7_78K_2["Value"].to_numpy())
+#I.append(zener2V7_78K_2["Reading"].to_numpy())
+#lnI.append(np.log(zener2V7_78K_2["Reading"].to_numpy()))
+
+colors = ['r','g','b','k','tab:orange']
+labels = ['9V1 78.1K','2V7 78.3K','2V7 300K','9V1 300K','9V1 300K 2']
+
+for i in range(len(V)):
+    plt.plot(V[i],I[i],"o",color=colors[i],label=labels[i])
+#i = 2
+#plt.plot(V[i],I[i],"o",color=colors[i],label=labels[i])
+plt.title("Zener sweeps liquid nitrogen")
+plt.xlabel("Voltage (V)")
+plt.ylabel("Current (I)")
+plt.grid()
+plt.legend()
+plt.show()
+
+plt.plot(V[3],I[3],'o',color='k',label=labels[i])
+plt.show()
+
+#%% FULL ZENER room temp
+zener9V1_78K = pd.read_csv("all_data//full_9V1.csv",skiprows=7).sort_values("Value")
+zener2V7_78K = pd.read_csv("all_data//full_2V7.csv",skiprows=7).sort_values("Value")
+GaIn=pd.read_csv("all_data//full_GaIn.csv",skiprows=7)
+sil=pd.read_csv("all_data//full_SIL.csv",skiprows=7)
+
+#zener2V7_78K_2 = pd.read_csv("all_data//fwd_zener_2V7_78K1.csv",skiprows=7).sort_values("Value")
+#zener9V1_78K_2 = pd.read_csv("all_data//fwd_zener_9V1_78K.csv",skiprows=7).sort_values("Value")
+
+V=[]
+I=[]
+lnI=[]
+V.append(zener9V1_78K["Value"].to_numpy())
+I.append(zener9V1_78K["Reading"].to_numpy())
+lnI.append(np.log(zener9V1_78K["Reading"].to_numpy()))
+
+V.append(zener2V7_78K["Value"].to_numpy())
+I.append(zener2V7_78K["Reading"].to_numpy())
+lnI.append(np.log(zener2V7_78K["Reading"].to_numpy()))
+
+V.append(GaIn["Value"].to_numpy())
+I.append(GaIn["Reading"].to_numpy())
+lnI.append(np.log(GaIn["Reading"].to_numpy()))
+
+V.append(sil["Value"].to_numpy())
+I.append(sil["Reading"].to_numpy())
+lnI.append(np.log(sil["Reading"].to_numpy()))
+
+#V.append(data_zener9V1_2["Value"].to_numpy())
+#I.append(data_zener9V1_2["Reading"].to_numpy())
+#lnI.append(np.log(data_zener9V1_2["Reading"].to_numpy()))
+
+#V.append(zener9V1_78K_2["Value"].to_numpy())
+#I.append(zener9V1_78K_2["Reading"].to_numpy())
+#lnI.append(np.log(zener9V1_78K_2["Reading"].to_numpy()))
+
+#V.append(zener2V7_78K_2["Value"].to_numpy())
+#I.append(zener2V7_78K_2["Reading"].to_numpy())
+#lnI.append(np.log(zener2V7_78K_2["Reading"].to_numpy()))
+
+colors = ['r','g','b','k','tab:orange']
+labels = ['Zener 9V1','Zener 2V7','GaIn','Silicon']
+
+for i in range(len(V)):
+    plt.plot(-V[i],I[i],"o",color=colors[i],label=labels[i])
+#i = 2
+#plt.plot(V[i],I[i],"o",color=colors[i],label=labels[i])
+plt.title("Diode Sweeps full")
+plt.xlabel("Voltage (V)")
+plt.ylabel("Current (I)")
+plt.grid()
+plt.legend()
+plt.xlim(-2,3)
+plt.show()
+
+#plt.plot(V[3],I[3],'o',color='k',label=labels[i])
+#plt.show()
 
 
+#%% LEDs at temps 0-70C
 
-#%% Reverse bias diodes 77K
+temp = np.array([0,10,20,30,40,50,60,70])
+blue = ['all_data//bfwd0CX.csv','all_data//bfwd10C.csv','all_data//bfwd20C.csv','all_data//bfwd30C.csv','all_data//bfwd40C.csv','all_data//bfwd50C.csv','all_data//bfwd60C.csv','all_data//bfwd70C.csv']
+green = ['all_data//gfwd0CX.csv','all_data//gfwd10C.csv','all_data//gfwd20C.csv','all_data//gfwd30C.csv','all_data//gfwd40C.csv','all_data//gfwd50C.csv','all_data//gfwd60C.csv','all_data//gfwd70C.csv']
+red = ['all_data//rfwd0CX.csv','all_data//rfwd10C.csv','all_data//rfwd20C.csv','all_data//rfwd30C.csv','all_data//rfwd40C.csv','all_data//rfwd50C.csv','all_data//rfwd60C.csv','all_data//rfwd70C.csv']
+
+V_blue = []
+V_green = []
+V_red = []
+I_blue = []
+I_green = []
+I_red = []
+lnI_blue = []
+lnI_green = []
+lnI_red = []
+for i in range(len(temp)):
+    blue_data = pd.read_csv(blue[i],skiprows=7).sort_values('Value')
+    V_blue.append(blue_data["Value"].to_numpy())
+    I_blue.append(blue_data["Reading"].to_numpy())
+    lnI_blue.append(np.log(blue_data["Reading"].to_numpy()))
+    green_data = pd.read_csv(green[i],skiprows=7).sort_values('Value')
+    V_green.append(green_data["Value"].to_numpy())
+    I_green.append(green_data["Reading"].to_numpy())
+    lnI_green.append(np.log(green_data["Reading"].to_numpy()))
+    red_data = pd.read_csv(red[i],skiprows=7).sort_values('Value')
+    V_red.append(red_data["Value"].to_numpy())
+    I_red.append(red_data["Reading"].to_numpy())
+    lnI_red.append(np.log(red_data["Reading"].to_numpy()))
+
+for i in range(len(temp)):
+    plt.plot(V_blue[i],lnI_blue[i],'o',color = 'b',label='Blue')
+    plt.plot(V_green[i],lnI_green[i],'o',color = 'g',label='Green')
+    plt.plot(V_red[i],lnI_red[i],'o',color = 'r',label='Red')
+    plt.xlabel('Voltage (V)')
+    plt.ylabel('lnCurrent (lnI)')
+    plt.title('LEDs at %s C' %temp[i])
+    plt.xlim(1,4)
+    plt.grid()
+    plt.show()
+
+
 
 
 
@@ -255,3 +411,5 @@ plt.show()
 
 print('nid = ',1/(fit[1]*kB*T/e))
 """
+
+# %%
